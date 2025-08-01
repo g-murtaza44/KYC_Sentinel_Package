@@ -1,0 +1,157 @@
+# How to Build KYC Sentinel as Executable (.exe)
+
+## Prerequisites
+1. Install Python 3.8+ on your system
+2. Ensure all dependencies are installed
+3. Test the application runs correctly with `python main.py`
+
+## Step-by-Step Build Process
+
+### 1. Install Dependencies
+```bash
+# Using pip
+pip install -r requirements.txt
+pip install pyinstaller
+
+# OR using uv (recommended)
+uv pip install -r requirements.txt
+uv pip install pyinstaller
+```
+
+### 2. Build Single Executable File
+```bash
+# Navigate to project directory
+cd KYC_Sentinel
+
+# Build one-file executable (no console window)
+pyinstaller --onefile --noconsole main.py
+
+# Alternative with custom name and icon (if available)
+pyinstaller --onefile --noconsole --name "KYC_Sentinel" --icon=assets/icon.ico main.py
+```
+
+### 3. Build Options Explained
+- `--onefile`: Creates a single executable file (slower startup but easier distribution)
+- `--noconsole`: Hides the console window (GUI-only mode)
+- `--name`: Custom name for the executable
+- `--icon`: Custom icon file (.ico format for Windows)
+
+### 4. Alternative: Directory Distribution
+```bash
+# Creates a folder with executable and dependencies (faster startup)
+pyinstaller --noconsole main.py
+```
+
+### 5. Find Your Executable
+After building, find your executable in:
+- **One-file build**: `./dist/main.exe` (or custom name)
+- **Directory build**: `./dist/main/main.exe`
+
+## Advanced Build Options
+
+### Include Additional Files
+If you need to include additional files (like sample CSV):
+```bash
+pyinstaller --onefile --noconsole --add-data "input/sample_input.csv;input" main.py
+```
+
+### Optimize Size
+```bash
+# Exclude unnecessary modules to reduce size
+pyinstaller --onefile --noconsole --exclude-module matplotlib --exclude-module scipy main.py
+```
+
+### Debug Build Issues
+```bash
+# Build with console to see error messages
+pyinstaller --onefile main.py
+
+# Run the executable from command line to see errors
+./dist/main.exe
+```
+
+## Testing Your Executable
+
+1. **Test on Build Machine**: Run `./dist/main.exe` to verify it works
+2. **Test Dependencies**: Ensure all required DLLs are included
+3. **Test Network**: Verify API calls work from the executable
+4. **Test File Operations**: Check that Excel export works correctly
+
+## Distribution Notes
+
+### Windows Distribution
+- The `.exe` file should run on Windows 10/11 without Python installed
+- Include any required Visual C++ redistributables if needed
+- Test on a clean Windows machine without Python
+
+### File Size Considerations
+- One-file executable: ~15-25 MB (includes Python interpreter)
+- Directory distribution: Multiple files but faster startup
+- Consider using UPX packer to reduce size: `pyinstaller --upx-dir /path/to/upx ...`
+
+## Common Build Issues & Solutions
+
+### 1. "Failed to execute script main"
+- **Cause**: Missing dependencies or path issues
+- **Solution**: Use `--debug` flag and check console output
+
+### 2. Large Executable Size
+- **Cause**: Including unnecessary modules
+- **Solution**: Use `--exclude-module` for unused packages
+
+### 3. Antivirus False Positives
+- **Cause**: PyInstaller executables sometimes trigger antivirus
+- **Solution**: Add exclusion or use code signing certificate
+
+### 4. Missing tkinter
+- **Cause**: tkinter not properly bundled
+- **Solution**: Ensure tkinter is available in build environment
+
+## Build Script (Optional)
+
+Create `build.bat` (Windows) or `build.sh` (Linux/macOS):
+
+```bash
+#!/bin/bash
+# build.sh
+
+echo "Building KYC Sentinel executable..."
+
+# Install dependencies
+pip install -r requirements.txt
+pip install pyinstaller
+
+# Clean previous builds
+rm -rf build/ dist/ *.spec
+
+# Build executable
+pyinstaller --onefile --noconsole --name "KYC_Sentinel" main.py
+
+echo "Build complete! Executable located at: ./dist/KYC_Sentinel.exe"
+echo "Test the executable before distribution."
+```
+
+## Final Checklist
+
+Before distributing your executable:
+- [ ] Test on the build machine
+- [ ] Test on a machine without Python installed
+- [ ] Verify API connectivity works
+- [ ] Test both manual and batch modes
+- [ ] Verify Excel export functionality
+- [ ] Check file paths work correctly
+- [ ] Test error handling (disconnect internet, bad CSV, etc.)
+
+## File Structure After Build
+```
+KYC_Sentinel/
+├── main.py
+├── requirements.txt
+├── build/                 # Temporary build files (can delete)
+├── dist/
+│   └── KYC_Sentinel.exe  # Your final executable
+├── main.spec             # PyInstaller spec file (can delete)
+└── ...other project files
+```
+
+The executable in `dist/` is your final product ready for distribution!

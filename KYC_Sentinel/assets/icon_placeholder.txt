@@ -1,0 +1,30 @@
+# Icon Placeholder
+
+To add an application icon for KYC Sentinel:
+
+1. **Find or create an icon file**:
+   - Format: .png (for general use) or .ico (for Windows executable)
+   - Recommended sizes: 32x32, 64x64, or 128x128 pixels
+   - Simple, professional design (shield, checkmark, or document icon work well)
+
+2. **Save the icon**:
+   - Save as `icon.png` or `icon.ico` in this `/assets/` directory
+   - Remove this placeholder file
+
+3. **Use in PyInstaller**:
+   ```bash
+   pyinstaller --onefile --noconsole --icon=assets/icon.ico main.py
+   ```
+
+## Suggested Icon Sources:
+- **Free Icons**: Flaticon.com, Icons8.com, Feather Icons
+- **Create Custom**: Use GIMP, Canva, or online icon generators
+- **Professional**: Hire a designer for custom branding
+
+## Icon Ideas for KYC Sentinel:
+- Shield with checkmark (security/compliance theme)
+- Magnifying glass over document (screening theme)
+- Balance scales (compliance/legal theme)
+- Document with shield (document verification theme)
+
+The application will work perfectly without an icon - this is purely for visual enhancement of the executable.
