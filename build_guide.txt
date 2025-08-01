@@ -1,0 +1,38 @@
+# Build Guide for KYC Sentinel Package
+
+This guide provides steps to generate an executable (.exe) file from the `main.py` script using PyInstaller.
+
+## Prerequisites
+- Ensure you have Python installed on your machine.
+- Install PyInstaller if you haven't already:
+  
+  ```bash
+  pip install pyinstaller
+  ```
+
+## Steps to Create Executable
+1. **Open Command Prompt** (or terminal).
+2. **Navigate to the directory** where `main.py` is located:
+   
+   ```bash
+   cd path\to\KYC_Sentinel_Package
+   ```
+
+3. **Run PyInstaller** with the following command:
+   
+   ```bash
+   pyinstaller --onefile main.py
+   ```
+
+   - The `--onefile` flag packages everything into a single executable.
+
+4. **Locate the executable**:
+   - After the build process is complete, navigate to the `dist` folder created in the same directory.
+   - Your `.exe` file will be located there.
+
+5. **Test the executable**:
+   - You can now run the executable directly by double-clicking it in the `dist` folder.
+
+## Additional Notes
+- You may want to customize the PyInstaller command with additional flags depending on your needs.
+- Refer to the [PyInstaller documentation](https://pyinstaller.readthedocs.io/en/stable/) for more options.
