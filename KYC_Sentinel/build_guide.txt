@@ -1,0 +1,241 @@
+# KYC Sentinel - Build Guide
+# How to build a standalone Windows executable (.exe)
+
+## Prerequisites
+
+1. **Install Python 3.8 or higher**
+   - Download from: https://python.org/downloads/
+   - During installation, check "Add Python to PATH"
+   - Verify installation: `python --version`
+
+2. **Install required dependencies**
+   
+   ### Option A: Using pip (Classic)
+   ```bash
+   pip install -r requirements.txt
+   ```
+   
+   ### Option B: Using uv (Modern - Faster)
+   ```bash
+   pip install uv
+   uv pip install -r requirements.txt
+   ```
+
+## Building the Executable
+
+### Method 1: One-File Executable (Recommended)
+
+This creates a single .exe file that contains everything:
+
+```bash
+pyinstaller --onefile --noconsole main.py
+```
+
+**Flags explanation:**
+- `--onefile`: Creates a single executable file
+- `--noconsole`: Hides the console window (GUI only)
+- `main.py`: The main Python script
+
+### Method 2: Directory Distribution
+
+This creates a folder with the executable and supporting files:
+
+```bash
+pyinstaller --noconsole main.py
+```
+
+### Method 3: With Custom Icon (Optional)
+
+If you have an icon file:
+
+```bash
+pyinstaller --onefile --noconsole --icon=assets/icon.ico main.py
+```
+
+## Build Output
+
+After running PyInstaller:
+
+1. **dist/** folder is created
+2. **build/** folder contains temporary files
+3. **main.spec** file contains build configuration
+
+### File locations:
+- **One-file build:** `dist/main.exe` (single executable)
+- **Directory build:** `dist/main/main.exe` (with supporting files)
+
+## Advanced Build Options
+
+### Custom Build Specification
+
+Create a custom `main.spec` file for advanced configuration:
+
+```python
+# main.spec
+a = Analysis(['main.py'],
+             pathex=[],
+             binaries=[],
+             datas=[('input', 'input'), ('output', 'output')],
+             hiddenimports=[],
+             hookspath=[],
+             runtime_hooks=[],
+             excludes=[],
+             win_no_prefer_redirects=False,
+             win_private_assemblies=False,
+             cipher=None,
+             noarchive=False)
+
+pyz = PYZ(a.pure, a.zipped_data, cipher=None)
+
+exe = EXE(pyz,
+          a.scripts,
+          a.binaries,
+          a.zipfiles,
+          a.datas,
+          [],
+          name='KYC_Sentinel',
+          debug=False,
+          bootloader_ignore_signals=False,
+          strip=False,
+          upx=True,
+          upx_exclude=[],
+          runtime_tmpdir=None,
+          console=False,
+          icon='assets/icon.ico')
+```
+
+Then build with:
+```bash
+pyinstaller main.spec
+```
+
+## Testing the Executable
+
+1. **Navigate to dist folder:**
+   ```bash
+   cd dist
+   ```
+
+2. **Run the executable:**
+   ```bash
+   main.exe
+   ```
+
+3. **Test both modes:**
+   - Manual input with a test name
+   - Batch processing with sample_input.csv
+
+## Distribution Package
+
+### Create a complete distribution:
+
+1. **Create distribution folder:**
+   ```
+   KYC_Sentinel_v1.0/
+   ├── KYC_Sentinel.exe
+   ├── input/
+   │   └── sample_input.csv
+   ├── output/
+   │   └── (results will be saved here)
+   ├── README.txt
+   └── User_Guide.pdf
+   ```
+
+2. **Copy files:**
+   ```bash
+   mkdir KYC_Sentinel_v1.0
+   copy dist\main.exe KYC_Sentinel_v1.0\KYC_Sentinel.exe
+   xcopy input KYC_Sentinel_v1.0\input\ /E
+   mkdir KYC_Sentinel_v1.0\output
+   copy README.md KYC_Sentinel_v1.0\README.txt
+   ```
+
+## Troubleshooting Build Issues
+
+### Common Problems:
+
+1. **"Module not found" errors:**
+   ```bash
+   # Add hidden imports
+   pyinstaller --onefile --noconsole --hidden-import=pandas --hidden-import=openpyxl main.py
+   ```
+
+2. **Large file size:**
+   ```bash
+   # Exclude unnecessary modules
+   pyinstaller --onefile --noconsole --exclude-module=matplotlib main.py
+   ```
+
+3. **Antivirus false positives:**
+   - Add exclusion for build directory
+   - Use `--debug=all` for debugging
+   - Consider code signing for distribution
+
+4. **Missing data files:**
+   ```bash
+   # Include data files
+   pyinstaller --onefile --noconsole --add-data "input;input" --add-data "output;output" main.py
+   ```
+
+### Build Environment:
+
+**Recommended setup:**
+- Clean Python environment
+- Latest PyInstaller version
+- Windows 10/11 for Windows executables
+- Administrator privileges for build process
+
+### Performance Optimization:
+
+1. **Reduce startup time:**
+   ```bash
+   pyinstaller --onefile --noconsole --optimize=2 main.py
+   ```
+
+2. **Compress executable:**
+   ```bash
+   # Install UPX compressor first
+   pyinstaller --onefile --noconsole --upx-dir=C:\upx main.py
+   ```
+
+## Final Steps
+
+1. **Test executable thoroughly:**
+   - Test on clean Windows machine
+   - Verify all features work offline
+   - Test with various CSV formats
+   - Check Excel output generation
+
+2. **Create installer (optional):**
+   - Use NSIS or Inno Setup
+   - Include all required folders
+   - Add desktop shortcuts
+   - Register file associations
+
+3. **Documentation:**
+   - Update version numbers
+   - Create user manual
+   - Include sample files
+   - Add troubleshooting guide
+
+## Build Checklist
+
+- [ ] Python 3.8+ installed
+- [ ] All dependencies installed
+- [ ] Application tested in development
+- [ ] PyInstaller command executed successfully
+- [ ] Executable runs without errors
+- [ ] Both manual and batch modes tested
+- [ ] Excel output verified
+- [ ] Sample CSV file included
+- [ ] Documentation updated
+- [ ] Distribution package created
+- [ ] Final testing on target machine
+
+## Notes
+
+- **Build time:** 2-5 minutes depending on system
+- **File size:** Approximately 50-100MB for one-file build
+- **Compatibility:** Windows 7/8/10/11 (64-bit recommended)
+- **Dependencies:** All Python packages bundled in executable
+- **Internet:** Required only for API calls, not for application startup

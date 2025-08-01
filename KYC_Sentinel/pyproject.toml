@@ -1,0 +1,61 @@
+[project]
+name = "kyc-sentinel"
+version = "1.0.0"
+description = "Desktop application for KYC/AML compliance screening using OpenSanctions API"
+authors = [
+    {name = "Senior Python Developer", email = "developer@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["kyc", "aml", "compliance", "screening", "opensanctions"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Office/Business :: Financial",
+]
+
+dependencies = [
+    "pandas>=1.5.0",
+    "requests>=2.28.0",
+    "openpyxl>=3.0.0",
+    "pyinstaller>=5.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=22.0.0",
+    "flake8>=5.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/example/kyc-sentinel"
+Repository = "https://github.com/example/kyc-sentinel.git"
+Issues = "https://github.com/example/kyc-sentinel/issues"
+
+[project.scripts]
+kyc-sentinel = "main:main"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["main"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38']
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
